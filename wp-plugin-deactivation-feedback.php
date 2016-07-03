@@ -53,4 +53,31 @@ class WP_Plugin_Deactivation_Feedback {
 
   }
 
+  public function init() {
+
+    add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+
+  }
+
+  public function admin_enqueue_scripts() {
+
+    $suffix  = ( $this->helper->is_script_debug() ) ? '': '.min';
+		$css_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/assets/css/';
+		$js_dir  = ( $this->helper->is_script_debug() ) ? untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/assets/js/source/' : untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/assets/js/';
+    $screen  = get_current_screen();
+
+    wp_register_script( 'wp-plugin-deactivation-feedback', $js_dir . 'feedback' . $suffix . '.js', 'jQuery', '1.0.0', true );
+
+    // Enqueue scripts only where needed.
+    if( $screen->base == 'plugins' ) {
+
+      // Loads the popup files from the Codeless library.
+      $this->helper->add_ui_helper_files();
+
+      wp_enqueue_script( 'wp-plugin-deactivation-feedback' );
+
+    }
+
+  }
+
 }
