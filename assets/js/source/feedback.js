@@ -11,7 +11,7 @@ jQuery(document).ready(function ($) {
 
 		init : function() {
 
-			console.log( this.get_plugins() );
+			this.run();
 
 		},
 
@@ -21,13 +21,40 @@ jQuery(document).ready(function ($) {
 
 		},
 
-		get_plugin_deactivation_url : function( plugin ) {
+		get_plugin_deactivation_anchor : function ( plugin ) {
 
 			var row  = jQuery('tr[data-plugin="' + plugin + '"]');
 			var link = row.find( 'span.deactivate a' );
-			var href = jQuery( link ).attr('href');
+
+			return link;
+
+		},
+
+		get_plugin_deactivation_url : function( a ) {
+
+			var href = jQuery( a ).attr('href');
 
 			return href;
+
+		},
+
+		run : function() {
+
+			var plugins = this.get_plugins();
+
+			jQuery.each( plugins, function( i, plugin ) {
+
+				var anchor = WPDF_Form.get_plugin_deactivation_anchor( plugin.file );
+				var link   = WPDF_Form.get_plugin_deactivation_url( anchor );
+
+				jQuery( anchor ).on('click', function( event ) {
+
+					// Disable redirect on click because we're gonna show a popup.
+					event.preventDefault();
+
+				});
+
+			});
 
 		}
 
