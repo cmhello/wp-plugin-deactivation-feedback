@@ -57,6 +57,7 @@ class WP_Plugin_Deactivation_Feedback {
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'wpdf_registered_plugins', array( $this, 'register_plugin'), 10, 1 );
+		add_action( 'admin_footer', array( $this, 'add_popups' ) );
 
 	}
 
@@ -64,10 +65,17 @@ class WP_Plugin_Deactivation_Feedback {
 
 		$plugins[] = array(
 			'file' => $this->plugin,
-			'api'  => $this->api_url
+			'api'  => $this->api_url,
+			'slug' => $this->get_plugin_slug( $this->plugin )
 		);
 
 		return $plugins;
+
+	}
+
+	private function get_plugin_slug( $plugin ) {
+
+		return sanitize_title( strstr( $plugin, '/', true ) );
 
 	}
 
@@ -93,6 +101,16 @@ class WP_Plugin_Deactivation_Feedback {
 				'plugins' => apply_filters( 'wpdf_registered_plugins', array() ),
 			) );
 
+		}
+
+	}
+
+	public function add_popups() {
+
+		$plugins = apply_filters( 'wpdf_registered_plugins', array() );
+
+		foreach ( $plugins as $plugin ) {
+			include 'views/popup.php';
 		}
 
 	}

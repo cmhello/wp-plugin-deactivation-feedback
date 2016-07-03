@@ -52,6 +52,15 @@ jQuery(document).ready(function ($) {
 					// Disable redirect on click because we're gonna show a popup.
 					event.preventDefault();
 
+					var popup = null;
+
+		      popup = codelessUi.popup()
+		        .modal( true )
+		        .size( 595, 380 )
+		        .title( '' )
+		        .content( '#wpdf-popup-' + plugin.slug )
+		        .show();
+
 				});
 
 			});
