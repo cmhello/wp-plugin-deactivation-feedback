@@ -88,6 +88,11 @@ class WP_Plugin_Deactivation_Feedback {
 
 			wp_enqueue_script( 'wp-plugin-deactivation-feedback' );
 
+			wp_localize_script( 'wp-plugin-deactivation-feedback', 'wpdf_settings', array(
+				'ajax'    => admin_url( 'admin-ajax.php' ),
+				'plugins' => apply_filters( 'wpdf_registered_plugins', array() ),
+			) );
+
 		}
 
 	}

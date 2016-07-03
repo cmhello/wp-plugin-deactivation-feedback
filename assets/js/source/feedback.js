@@ -10,7 +10,16 @@ jQuery(document).ready(function ($) {
 	var WPDF_Form = {
 
 		init : function() {
+
+			console.log( this.get_plugins() );
+
 		},
+
+		get_plugins : function() {
+
+			return wpdf_settings.plugins;
+
+		}
 
 	};
 
