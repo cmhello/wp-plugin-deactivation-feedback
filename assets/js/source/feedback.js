@@ -7,13 +7,13 @@
  */
 jQuery(document).ready(function ($) {
 
-  var WPDF_Form = {
+	var WPDF_Form = {
 
-    init : function() {
+		init : function() {
 		},
 
-  };
+	};
 
-  WPDF_Form.init();
+	WPDF_Form.init();
 
 });

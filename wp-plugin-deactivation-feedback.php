@@ -32,52 +32,64 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class WP_Plugin_Deactivation_Feedback {
 
-  private $api_url;
+	private $api_url;
 
-  private $plugin;
+	private $plugin;
 
-  private $choices;
+	private $choices;
 
-  public $helper;
+	public $helper;
 
-  public function __construct( $api_url, $plugin ) {
+	public function __construct( $api_url, $plugin ) {
 
-    $this->api_url = $api_url;
-    $this->plugin  = $plugin;
+		$this->api_url = $api_url;
+		$this->plugin  = $plugin;
 
-    // Let's run the codeless library ;)
-    $this->helper = new Codeless;
+		// Let's run the codeless library ;)
+		$this->helper = new Codeless;
 
-    // Include autoloader.
-    require __DIR__ . '/vendor/autoload.php';
+		// Include autoloader.
+		require __DIR__ . '/vendor/autoload.php';
 
-  }
+	}
 
-  public function init() {
+	public function init() {
 
-    add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
+		add_filter( 'wpdf_registered_plugins', array( $this, 'register_plugin'), 10, 1 );
 
-  }
+	}
 
-  public function admin_enqueue_scripts() {
+	public function register_plugin( $plugins ) {
 
-    $suffix  = ( $this->helper->is_script_debug() ) ? '': '.min';
+		$plugins[] = array(
+			'file' => $this->plugin,
+			'api'  => $this->api_url
+		);
+
+		return $plugins;
+
+	}
+
+	public function admin_enqueue_scripts() {
+
+		$suffix  = ( $this->helper->is_script_debug() ) ? '': '.min';
 		$css_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/assets/css/';
 		$js_dir  = ( $this->helper->is_script_debug() ) ? untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/assets/js/source/' : untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/assets/js/';
-    $screen  = get_current_screen();
+		$screen  = get_current_screen();
 
-    wp_register_script( 'wp-plugin-deactivation-feedback', $js_dir . 'feedback' . $suffix . '.js', 'jQuery', '1.0.0', true );
+		wp_register_script( 'wp-plugin-deactivation-feedback', $js_dir . 'feedback' . $suffix . '.js', 'jQuery', '1.0.0', true );
 
-    // Enqueue scripts only where needed.
-    if( $screen->base == 'plugins' ) {
+		// Enqueue scripts only where needed.
+		if( $screen->base == 'plugins' ) {
 
-      // Loads the popup files from the Codeless library.
-      $this->helper->add_ui_helper_files();
+			// Loads the popup files from the Codeless library.
+			$this->helper->add_ui_helper_files();
 
-      wp_enqueue_script( 'wp-plugin-deactivation-feedback' );
+			wp_enqueue_script( 'wp-plugin-deactivation-feedback' );
 
-    }
+		}
 
-  }
+	}
 
 }
