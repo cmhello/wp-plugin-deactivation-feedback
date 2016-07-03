@@ -19,6 +19,16 @@ jQuery(document).ready(function ($) {
 
 			return wpdf_settings.plugins;
 
+		},
+
+		get_plugin_deactivation_url : function( plugin ) {
+
+			var row  = jQuery('tr[data-plugin="' + plugin + '"]');
+			var link = row.find( 'span.deactivate a' );
+			var href = jQuery( link ).attr('href');
+
+			return href;
+
 		}
 
 	};
