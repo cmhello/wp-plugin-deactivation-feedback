@@ -18,6 +18,7 @@
 		"require": {
 				"php": ">=5.3.2",
 				"composer/installers": "~1.0",
-				"alessandrotesoro/wp-codeless-lib": "dev-master"
+				"alessandrotesoro/wp-codeless-lib": "dev-master",
+				"alessandrotesoro/html-elements": "dev-master"
 		}
 }

@@ -1,0 +1,22 @@
+/**
+ * WPDF.
+ * http://alessandrotesoro.me
+ *
+ * Copyright (c) 2016 Alessandro Tesoro
+ * Licensed under the GPLv2+ license.
+ */
+/* line 9, sass/wpdf.scss */
+.wpdf-hide {
+  display: none;
+}
+
+/* line 13, sass/wpdf.scss */
+.wpdf-title {
+  margin-top: 0;
+}
+
+/* line 19, sass/wpdf.scss */
+.wpdf-choices label {
+  display: block;
+  margin-bottom: 0.5em;
+}

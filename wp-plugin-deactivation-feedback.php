@@ -36,20 +36,26 @@ class WP_Plugin_Deactivation_Feedback {
 
 	private $plugin;
 
-	private $choices;
+	private $choices = array();
 
 	public $helper;
+
+	public $elements;
 
 	public function __construct( $api_url, $plugin ) {
 
 		$this->api_url = $api_url;
 		$this->plugin  = $plugin;
+		$this->choices = $this->get_choices();
+
+		// Include autoloader.
+		require __DIR__ . '/vendor/autoload.php';
 
 		// Let's run the codeless library ;)
 		$this->helper = new Codeless;
 
-		// Include autoloader.
-		require __DIR__ . '/vendor/autoload.php';
+		// Let's run the html helper library.
+		$this->elements = new HTML_Elements;
 
 	}
 
@@ -79,29 +85,15 @@ class WP_Plugin_Deactivation_Feedback {
 
 	}
 
-	public function admin_enqueue_scripts() {
+	public function get_choices() {
 
-		$suffix  = ( $this->helper->is_script_debug() ) ? '': '.min';
-		$css_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/assets/css/';
-		$js_dir  = ( $this->helper->is_script_debug() ) ? untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/assets/js/source/' : untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/assets/js/';
-		$screen  = get_current_screen();
+		$choices = array(
+			'did_not_work'   => 'The plugin didn\'t work.',
+			'another_plugin' => 'I found a better plugin.',
+			'other'          => 'Other'
+		);
 
-		wp_register_script( 'wp-plugin-deactivation-feedback', $js_dir . 'feedback' . $suffix . '.js', 'jQuery', '1.0.0', true );
-
-		// Enqueue scripts only where needed.
-		if( $screen->base == 'plugins' ) {
-
-			// Loads the popup files from the Codeless library.
-			$this->helper->add_ui_helper_files();
-
-			wp_enqueue_script( 'wp-plugin-deactivation-feedback' );
-
-			wp_localize_script( 'wp-plugin-deactivation-feedback', 'wpdf_settings', array(
-				'ajax'    => admin_url( 'admin-ajax.php' ),
-				'plugins' => apply_filters( 'wpdf_registered_plugins', array() ),
-			) );
-
-		}
+		return $choices;
 
 	}
 
@@ -111,6 +103,34 @@ class WP_Plugin_Deactivation_Feedback {
 
 		foreach ( $plugins as $plugin ) {
 			include 'views/popup.php';
+		}
+
+	}
+
+	public function admin_enqueue_scripts() {
+
+		$suffix  = ( $this->helper->is_script_debug() ) ? '': '.min';
+		$css_dir = untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/assets/css/';
+		$js_dir  = ( $this->helper->is_script_debug() ) ? untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/assets/js/source/' : untrailingslashit( plugin_dir_url( __FILE__ ) ) . '/assets/js/';
+		$screen  = get_current_screen();
+
+		wp_register_script( 'wp-plugin-deactivation-feedback', $js_dir . 'feedback' . $suffix . '.js', 'jQuery', '1.0.0', true );
+		wp_register_style( 'wp-plugin-deactivation-feedback', $css_dir . 'wpdf' . $suffix . '.css', '1.0.0' );
+
+		// Enqueue scripts only where needed.
+		if( $screen->base == 'plugins' ) {
+
+			// Loads the popup files from the Codeless library.
+			$this->helper->add_ui_helper_files();
+
+			wp_enqueue_script( 'wp-plugin-deactivation-feedback' );
+			wp_enqueue_style( 'wp-plugin-deactivation-feedback' );
+
+			wp_localize_script( 'wp-plugin-deactivation-feedback', 'wpdf_settings', array(
+				'ajax'    => admin_url( 'admin-ajax.php' ),
+				'plugins' => apply_filters( 'wpdf_registered_plugins', array() ),
+			) );
+
 		}
 
 	}
