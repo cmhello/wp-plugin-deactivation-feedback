@@ -38,6 +38,12 @@ jQuery(document).ready(function ($) {
 
 		},
 
+		show_extra : function() {
+
+			console.log( 'e' );
+
+		},
+
 		run : function() {
 
 			var plugins = this.get_plugins();
@@ -58,8 +64,11 @@ jQuery(document).ready(function ($) {
 		        .modal( true )
 		        .size( 595, 300 )
 		        .title( '' )
+						.onshow( WPDF_Form.show_extra )
 		        .content( '#wpdf-popup-' + plugin.slug )
 		        .show();
+
+					popup.$().on( 'click', '.btn-cancel', popup.destroy );
 
 				});
 
