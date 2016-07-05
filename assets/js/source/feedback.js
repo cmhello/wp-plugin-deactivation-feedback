@@ -40,7 +40,25 @@ jQuery(document).ready(function ($) {
 
 		show_extra : function() {
 
-			console.log( 'e' );
+			jQuery( 'input[type=radio][name=wpdf-choice]' ).on('change', function() {
+
+				var input_extra = jQuery( 'div.wrap-text-field input' );
+
+				jQuery( input_extra ).removeClass( 'wpdf-hide' );
+
+				switch( jQuery( this ).val() ) {
+					case 'did_not_work':
+			    	jQuery( input_extra ).attr( 'placeholder', wpdf_settings.reason );
+			    break;
+					case 'another_plugin':
+			    	jQuery( input_extra ).attr( 'placeholder', wpdf_settings.plugin_name );
+			    break;
+			    case 'other':
+			    	jQuery( input_extra ).attr( 'placeholder', '' );
+			    break;
+			  }
+
+			});
 
 		},
 

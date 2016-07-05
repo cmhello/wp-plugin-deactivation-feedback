@@ -126,12 +126,20 @@ class WP_Plugin_Deactivation_Feedback {
 			wp_enqueue_script( 'wp-plugin-deactivation-feedback' );
 			wp_enqueue_style( 'wp-plugin-deactivation-feedback' );
 
-			wp_localize_script( 'wp-plugin-deactivation-feedback', 'wpdf_settings', array(
-				'ajax'    => admin_url( 'admin-ajax.php' ),
-				'plugins' => apply_filters( 'wpdf_registered_plugins', array() ),
-			) );
+			$this->localize_js_strings();
 
 		}
+
+	}
+
+	public function localize_js_strings() {
+
+		wp_localize_script( 'wp-plugin-deactivation-feedback', 'wpdf_settings', array(
+			'ajax'        => admin_url( 'admin-ajax.php' ),
+			'plugins'     => apply_filters( 'wpdf_registered_plugins', array() ),
+			'plugin_name' => 'What\'s the plugin\'s name?',
+			'reason'      => 'Could you share some more details ? (optional)',
+		) );
 
 	}
 
