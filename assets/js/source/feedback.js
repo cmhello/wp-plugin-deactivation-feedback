@@ -15,12 +15,18 @@ jQuery(document).ready(function ($) {
 
 		},
 
+		/**
+		 * Get registered plugins.
+		 */
 		get_plugins : function() {
 
 			return wpdf_settings.plugins;
 
 		},
 
+		/**
+		 * Retrieve the deactivation link tag of a registered plugin.
+		 */
 		get_plugin_deactivation_anchor : function ( plugin ) {
 
 			var row  = jQuery('tr[data-plugin="' + plugin + '"]');
@@ -30,6 +36,9 @@ jQuery(document).ready(function ($) {
 
 		},
 
+		/**
+		 * Retrieve the url assigned to a deactivation link.
+		 */
 		get_plugin_deactivation_url : function( a ) {
 
 			var href = jQuery( a ).attr('href');
@@ -38,6 +47,9 @@ jQuery(document).ready(function ($) {
 
 		},
 
+		/**
+		 * Adjust elements of the popup form based on option's selection.
+		 */
 		popup_on_show : function() {
 
 			jQuery( 'input[type=radio][name=wpdf-choice]' ).on('change', function() {
@@ -64,12 +76,18 @@ jQuery(document).ready(function ($) {
 
 		},
 
+		/**
+		 * Send the feedback to the rest api.
+		 */
 		send_feedback : function( popup ) {
 
 			popup.loading(true);
 
 		},
 
+		/**
+		 * Run the popup and other stuff.
+		 */
 		run : function() {
 
 			var plugins = this.get_plugins();
@@ -104,6 +122,7 @@ jQuery(document).ready(function ($) {
 					// Send feedback to api via ajax.
 					jQuery( 'a#wpdf-submit' ).on('click', function( event ) {
 
+						// Check if an option has been selected, if not deactivate plugin.
 						if( jQuery( this ).hasClass( 'option-selected' ) ) {
 
 							event.preventDefault();

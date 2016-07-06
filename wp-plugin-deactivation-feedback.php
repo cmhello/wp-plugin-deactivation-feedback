@@ -32,16 +32,42 @@ if ( ! defined( 'ABSPATH' ) ) exit;
  */
 class WP_Plugin_Deactivation_Feedback {
 
+	/**
+	 * The REST API Url where feedbacks will be submitted.
+	 * @var string
+	 */
 	private $api_url;
 
+	/**
+	 * Folder/plugin-file.php combination of the plugin using the library.
+	 * @var string
+	 */
 	private $plugin;
 
+	/**
+	 * Form choices.
+	 * @var array
+	 */
 	private $choices = array();
 
+	/**
+	 * Helper library object.
+	 * @var object
+	 */
 	public $helper;
 
+	/**
+	 * Elements library object.
+	 * @var object
+	 */
 	public $elements;
 
+	/**
+	 * Get things started.
+	 *
+	 * @param string $api_url The REST API Url where feedbacks will be submitted.
+	 * @param string $plugin  folder/plugin-file.php combination of the plugin using the library.
+	 */
 	public function __construct( $api_url, $plugin ) {
 
 		$this->api_url = $api_url;
@@ -59,6 +85,10 @@ class WP_Plugin_Deactivation_Feedback {
 
 	}
 
+	/**
+	 * Run hooks
+	 * @return void
+	 */
 	public function init() {
 
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
@@ -67,6 +97,13 @@ class WP_Plugin_Deactivation_Feedback {
 
 	}
 
+	/**
+	 * Register plugin using the library into a filter
+	 * so that we can run multiple plugins at the same time.
+	 *
+	 * @param  array $plugins all plugins
+	 * @return array          all plugins
+	 */
 	public function register_plugin( $plugins ) {
 
 		$plugins[] = array(
@@ -79,12 +116,24 @@ class WP_Plugin_Deactivation_Feedback {
 
 	}
 
+	/**
+	 * Get the slug of the current plugin.
+	 *
+	 * @param  string $plugin folder/plugin-file.php combination of the plugin using the library.
+	 * @return string         slug.
+	 */
 	private function get_plugin_slug( $plugin ) {
 
 		return sanitize_title( strstr( $plugin, '/', true ) );
 
 	}
 
+	/**
+	 * Choices that will appear onto the form.
+	 * Replace this method withon a child class to localize the strings.
+	 *
+	 * @return array
+	 */
 	public function get_choices() {
 
 		$choices = array(
@@ -97,6 +146,9 @@ class WP_Plugin_Deactivation_Feedback {
 
 	}
 
+	/**
+	 * Add all popups to the plugins page.
+	 */
 	public function add_popups() {
 
 		$screen  = get_current_screen();
@@ -112,6 +164,11 @@ class WP_Plugin_Deactivation_Feedback {
 
 	}
 
+	/**
+	 * Load required styles and scripts.
+	 *
+	 * @return void
+	 */
 	public function admin_enqueue_scripts() {
 
 		$suffix  = ( $this->helper->is_script_debug() ) ? '': '.min';
@@ -137,6 +194,12 @@ class WP_Plugin_Deactivation_Feedback {
 
 	}
 
+	/**
+	 * Javascript strings read for localization.
+	 * Replace this method within a child class to add your own textdomain.
+	 *
+	 * @return void
+	 */
 	public function localize_js_strings() {
 
 		wp_localize_script( 'wp-plugin-deactivation-feedback', 'wpdf_settings', array(
