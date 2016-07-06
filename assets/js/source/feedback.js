@@ -62,15 +62,15 @@ jQuery(document).ready(function ($) {
 
 				switch( jQuery( this ).val() ) {
 					case 'did_not_work':
-			    	jQuery( input_extra ).attr( 'placeholder', wpdf_settings.reason );
-			    break;
+						jQuery( input_extra ).attr( 'placeholder', wpdf_settings.reason );
+					break;
 					case 'another_plugin':
-			    	jQuery( input_extra ).attr( 'placeholder', wpdf_settings.plugin_name );
-			    break;
-			    case 'other':
-			    	jQuery( input_extra ).attr( 'placeholder', '' );
-			    break;
-			  }
+						jQuery( input_extra ).attr( 'placeholder', wpdf_settings.plugin_name );
+					break;
+					case 'other':
+						jQuery( input_extra ).attr( 'placeholder', '' );
+					break;
+				}
 
 			});
 
@@ -79,9 +79,39 @@ jQuery(document).ready(function ($) {
 		/**
 		 * Send the feedback to the rest api.
 		 */
-		send_feedback : function( popup ) {
+		send_feedback : function( popup, redirect ) {
 
-			popup.loading(true);
+			popup.loading( true );
+
+			var data = {
+				'action':         wpdf_settings.ajax_action,
+				'feedback_nonce': wpdf_settings.feedback_nonce
+			};
+
+			jQuery.ajax({
+				type: 'POST',
+				dataType: 'json',
+				url: wpdf_settings.ajax,
+				data: data,
+
+					beforeSend: function() {},
+
+					success: function( results ) {
+						console.log(results);
+					},
+
+					// If there's an error, doesn't matter - deactivate plugin anyways.
+					error: function (jqXHR, textStatus, errorThrown) {
+
+          },
+
+          complete: function (jqXHR, textStatus) {
+
+						window.location.replace( redirect );
+
+					}
+
+			});
 
 		},
 
@@ -105,13 +135,13 @@ jQuery(document).ready(function ($) {
 					var popup = null;
 
 					// Create popup.
-		      popup = codelessUi.popup()
-		        .modal( true )
-		        .size( 595, 320 )
-		        .title( '' )
+					popup = codelessUi.popup()
+						.modal( true )
+						.size( 595, 320 )
+						.title( '' )
 						.onshow( WPDF_Form.popup_on_show )
-		        .content( '#wpdf-popup-' + plugin.slug )
-		        .show();
+						.content( '#wpdf-popup-' + plugin.slug )
+						.show();
 
 					// Set link to deactivation button.
 					popup.$().find( 'a#wpdf-submit' ).attr( 'href', link );
@@ -127,7 +157,7 @@ jQuery(document).ready(function ($) {
 
 							event.preventDefault();
 
-							WPDF_Form.send_feedback( popup );
+							WPDF_Form.send_feedback( popup, link );
 
 						}
 

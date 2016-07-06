@@ -33,6 +33,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 class WP_Plugin_Deactivation_Feedback {
 
 	/**
+	 * Ajax action responsible for sending the feedback to the api.
+	 */
+	const AJAX_ACTION = 'wpdf_send_feedback';
+
+	/**
 	 * The REST API Url where feedbacks will be submitted.
 	 * @var string
 	 */
@@ -94,6 +99,7 @@ class WP_Plugin_Deactivation_Feedback {
 		add_action( 'admin_enqueue_scripts', array( $this, 'admin_enqueue_scripts' ) );
 		add_filter( 'wpdf_registered_plugins', array( $this, 'register_plugin'), 10, 1 );
 		add_action( 'admin_footer', array( $this, 'add_popups' ) );
+		add_action( 'wp_ajax_'.self::AJAX_ACTION , array( $this, 'send_feedback' ) );
 
 	}
 
@@ -146,6 +152,19 @@ class WP_Plugin_Deactivation_Feedback {
 
 	}
 
+	public function send_feedback() {
+
+		check_ajax_referer( self::AJAX_ACTION, 'feedback_nonce' );
+
+    if( ! current_user_can( 'manage_options' ) )
+			return;
+
+			wp_ts();
+
+		wp_send_json_success();
+
+	}
+
 	/**
 	 * Add all popups to the plugins page.
 	 */
@@ -195,7 +214,7 @@ class WP_Plugin_Deactivation_Feedback {
 	}
 
 	/**
-	 * Javascript strings read for localization.
+	 * Javascript strings ready for localization.
 	 * Replace this method within a child class to add your own textdomain.
 	 *
 	 * @return void
@@ -203,11 +222,13 @@ class WP_Plugin_Deactivation_Feedback {
 	public function localize_js_strings() {
 
 		wp_localize_script( 'wp-plugin-deactivation-feedback', 'wpdf_settings', array(
-			'ajax'        => admin_url( 'admin-ajax.php' ),
-			'plugins'     => apply_filters( 'wpdf_registered_plugins', array() ),
-			'plugin_name' => 'What\'s the plugin\'s name?',
-			'reason'      => 'Could you share some more details ? (optional)',
-			'deactivate'  => 'Deactivate'
+			'ajax'           => admin_url( 'admin-ajax.php' ),
+			'plugins'        => apply_filters( 'wpdf_registered_plugins', array() ),
+			'plugin_name'    => 'What\'s the plugin\'s name?',
+			'reason'         => 'Could you share some more details ? (optional)',
+			'deactivate'     => 'Deactivate',
+			'ajax_action'    => self::AJAX_ACTION,
+			'feedback_nonce' => wp_create_nonce( self::AJAX_ACTION )
 		) );
 
 	}
