@@ -99,6 +99,11 @@ class WP_Plugin_Deactivation_Feedback {
 
 	public function add_popups() {
 
+		$screen  = get_current_screen();
+
+		if( $screen->base !== 'plugins' )
+			return;
+
 		$plugins = apply_filters( 'wpdf_registered_plugins', array() );
 
 		foreach ( $plugins as $plugin ) {

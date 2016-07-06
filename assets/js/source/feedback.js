@@ -80,7 +80,7 @@ jQuery(document).ready(function ($) {
 
 		      popup = codelessUi.popup()
 		        .modal( true )
-		        .size( 595, 300 )
+		        .size( 595, 320 )
 		        .title( '' )
 						.onshow( WPDF_Form.show_extra )
 		        .content( '#wpdf-popup-' + plugin.slug )

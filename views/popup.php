@@ -26,7 +26,7 @@
 
   <div class="buttons">
 
-    <a href="#" class="button btn-sub">Skip &amp; Deactivate</a>
+    <a href="#" class="button btn-sub" id="wpdf-submit">Skip &amp; Deactivate</a>
 
     <a href="#" class="button button-primary btn-cancel">Cancel</a>
 
