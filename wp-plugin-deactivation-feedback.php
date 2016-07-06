@@ -144,6 +144,7 @@ class WP_Plugin_Deactivation_Feedback {
 			'plugins'     => apply_filters( 'wpdf_registered_plugins', array() ),
 			'plugin_name' => 'What\'s the plugin\'s name?',
 			'reason'      => 'Could you share some more details ? (optional)',
+			'deactivate'  => 'Deactivate'
 		) );
 
 	}

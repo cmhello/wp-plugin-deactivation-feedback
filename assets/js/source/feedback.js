@@ -38,13 +38,15 @@ jQuery(document).ready(function ($) {
 
 		},
 
-		show_extra : function() {
+		popup_on_show : function() {
 
 			jQuery( 'input[type=radio][name=wpdf-choice]' ).on('change', function() {
 
 				var input_extra = jQuery( 'div.wrap-text-field input' );
 
 				jQuery( input_extra ).removeClass( 'wpdf-hide' );
+
+				jQuery( 'a#wpdf-submit' ).text( wpdf_settings.deactivate );
 
 				switch( jQuery( this ).val() ) {
 					case 'did_not_work':
@@ -78,14 +80,19 @@ jQuery(document).ready(function ($) {
 
 					var popup = null;
 
+					// Create popup.
 		      popup = codelessUi.popup()
 		        .modal( true )
 		        .size( 595, 320 )
 		        .title( '' )
-						.onshow( WPDF_Form.show_extra )
+						.onshow( WPDF_Form.popup_on_show )
 		        .content( '#wpdf-popup-' + plugin.slug )
 		        .show();
 
+					// Set link to deactivation button.
+					popup.$().find( 'a#wpdf-submit' ).attr( 'href', link );
+
+					// Close popup when clicking on cancel button.
 					popup.$().on( 'click', '.btn-cancel', popup.destroy );
 
 				});
