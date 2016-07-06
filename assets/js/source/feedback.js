@@ -46,7 +46,7 @@ jQuery(document).ready(function ($) {
 
 				jQuery( input_extra ).removeClass( 'wpdf-hide' );
 
-				jQuery( 'a#wpdf-submit' ).text( wpdf_settings.deactivate );
+				jQuery( 'a#wpdf-submit' ).text( wpdf_settings.deactivate ).addClass( 'option-selected' );
 
 				switch( jQuery( this ).val() ) {
 					case 'did_not_work':
@@ -61,6 +61,12 @@ jQuery(document).ready(function ($) {
 			  }
 
 			});
+
+		},
+
+		send_feedback : function( popup ) {
+
+			popup.loading(true);
 
 		},
 
@@ -94,6 +100,19 @@ jQuery(document).ready(function ($) {
 
 					// Close popup when clicking on cancel button.
 					popup.$().on( 'click', '.btn-cancel', popup.destroy );
+
+					// Send feedback to api via ajax.
+					jQuery( 'a#wpdf-submit' ).on('click', function( event ) {
+
+						if( jQuery( this ).hasClass( 'option-selected' ) ) {
+
+							event.preventDefault();
+
+							WPDF_Form.send_feedback( popup );
+
+						}
+
+					});
 
 				});
 
